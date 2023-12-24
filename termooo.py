@@ -115,8 +115,26 @@ class TermoooSolver:
         return -sum
 
 
+def findSmallestCoveringSubset(words: list, alpha: dict) -> list:
+    def cuniq(w, a):
+        return sum([1 for i, l in enumerate(w) if a[l] and l not in w[:i]])
+    subset = []
+    words = [[cuniq(w, alpha), w] for w in words if cuniq(w, alpha) > 0]
+    while True in alpha.values() and len(words) > 0:
+        word = max(words)[1]
+        subset.append(word)
+        for l in word: alpha[l] = False
+        words = [[cuniq(w[1], alpha), w[1]] for w in words if cuniq(w[1], alpha) > 0]
+    return subset
 
-newgame = TermoooGame("amar")
-newgame.play()
+with open('br-sem-acentos.txt') as f:
+    words = [l.strip().lower() for l in f if len(l.strip()) == 5]
+    alphabet = {l: True for l in 'abcdefghijklmnopqrstuvwxyz'}
+    subset = findSmallestCoveringSubset(words, alphabet)
+    print(subset)
+
+
+# newgame = TermoooGame("amar")
+# newgame.play()
 # print(newgame.guess("caar"))
 # solver = termooosolver(5, "br-sem-acentos.txt")
